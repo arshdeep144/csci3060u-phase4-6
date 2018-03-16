@@ -14,7 +14,7 @@ public class UserAccounts {
 	
 	/**
 		* This constructor method sets variables based on the provided arguments.
-        * The variables store information on the username, user type and available credit.
+		* The variables store information on the username, user type and available credit.
 	*/
     public UserAccounts(String name, String type, float credit) {
         userName = name;
@@ -63,14 +63,10 @@ public class UserAccounts {
         availableCredit += bidAmount;
     }
 
-<<<<<<< HEAD
     /**
     	* Gets the users type 
     	* @return userType returns user type
     */
-=======
-    // This get method returns the user account's type.
->>>>>>> 6e5c4eee4f5206bf9bad4561ae8ff567c4a31dc5
     public String getUserType() {
         return userType;
     }
