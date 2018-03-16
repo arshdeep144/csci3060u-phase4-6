@@ -1,10 +1,10 @@
 /**
 	* Stores all information on user into a file 
 	* and retrieves any required information on a user
-    * This program creates a file holding information on the user accounts. The file will store account information on
-    * the user type, username and available credit.The program allows for quick changes
-    * and retrieval of the account information. The back end will apply the daily
-    * transactions from the daily transaction file to this file to create a new user account file for next day.
+	* This program creates a file holding information on the user accounts. The file will store account information on
+ 	* the user type, username and available credit.The program allows for quick changes
+	* and retrieval of the account information. The back end will apply the daily
+	* transactions from the daily transaction file to this file to create a new user account file for next day.
 */
 public class UserAccounts {
 
