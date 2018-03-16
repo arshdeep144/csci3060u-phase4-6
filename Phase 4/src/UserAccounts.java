@@ -1,6 +1,10 @@
 /**
 	* Stores all information on user into a file 
 	* and retrieves any required information on a user
+    * This program creates a file holding information on the user accounts. The file will store account information on
+    * the user type, username and available credit.The program allows for quick changes
+    * and retrieval of the account information. The back end will apply the daily
+    * transactions from the daily transaction file to this file to create a new user account file for next day.
 */
 public class UserAccounts {
 
@@ -9,8 +13,8 @@ public class UserAccounts {
     public float availableCredit;
 	
 	/**
-		* Class constructor specifying users name, type,
-		* and amount of credit they have
+		* This constructor method sets variables based on the provided arguments.
+        * The variables store information on the username, user type and available credit.
 	*/
     public UserAccounts(String name, String type, float credit) {
         userName = name;
@@ -59,10 +63,14 @@ public class UserAccounts {
         availableCredit += bidAmount;
     }
 
+<<<<<<< HEAD
     /**
     	* Gets the users type 
     	* @return userType returns user type
     */
+=======
+    // This get method returns the user account's type.
+>>>>>>> 6e5c4eee4f5206bf9bad4561ae8ff567c4a31dc5
     public String getUserType() {
         return userType;
     }
@@ -70,7 +78,7 @@ public class UserAccounts {
     /**
     	* Gets the users name
     	* @return userName returns users name
-    */    	
+    */
     public String getUsername() {
         return userName;
     }
