@@ -282,7 +282,12 @@ public class BackEnd {
      * @param transaction - the deleteUser transaction from the daily transaction file
      */
     public static void deleteUser(String transaction) {
-
+      String userDeleted = transaction..substring(3,18);
+      for(UserAccounts user : users){
+        if(user.getUsername == userDeleted){
+          users.remove(user);
+        }
+      }
     }
 
     /**
