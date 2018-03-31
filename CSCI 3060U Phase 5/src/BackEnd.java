@@ -284,7 +284,7 @@ public class BackEnd {
     public static void deleteUser(String transaction) {
       String userDeleted = transaction..substring(3,18);
       for(UserAccounts user : users){
-        if(user.getUsername == userDeleted){
+        if(user.getUsername() == userDeleted){
           users.remove(user);
         }
       }
@@ -296,6 +296,19 @@ public class BackEnd {
      * @param transaction - the createUser transaction from the daily transaction file
      */
     public static void createUser(String transaction){
+        String userNameCreated = transaction.substring(3,18);
+        String userTypeCreated = transaction.substring(19,21);
+        Double userCredit = Double.parseDouble(transaction.substring(22,31));
+        UserAccounts newUser = UserAccounts(userNameCreated, userTypeCreated, (float) userCredit);
+        boolean duplicate = false;
+        for(UserAccounts user : users){
+          if(user.getUsername() == userNameCreated){
+            duplicate = true;
+          }
+        }
+        if(duplicate == false){
+          users.add(newUser);
+        }
         //Printing transaction for testing
         System.out.println("\n" + transaction);
     }
