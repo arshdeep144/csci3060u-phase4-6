@@ -13,14 +13,6 @@ public class ErrorLog {
     public String transaction;
     public String file;
 
-    /*
-     *The checkErrorType() function checks the type of error whether it be file or failed
-     *constrained errors.
-     */
-    public static void checkErrorType() {
-      //Conditional statements to determine whether error is file or failed constraint
-    }
-
     /**
      * The printError() method will print an appropriate error message depending on the
      * type of error.
@@ -30,6 +22,12 @@ public class ErrorLog {
      * @param file - the file that caused the error
      */
     public static void printError(String errorType, String description, String transaction, String file) {
+        if (errorType == "file"){
+            System.out.println(file + " caused an error. " + description);
+        }
 
+        else if (errorType == "constraint") {
+            System.out.println(transaction + " caused an error. " + description);
+        }
     }
 }

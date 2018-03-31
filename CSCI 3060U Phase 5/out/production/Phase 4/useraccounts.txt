@@ -1,3 +1,2 @@
-saijeeshan      AA 001000.00
-arshdeep        FS 010000.00
-norman          BS 310000.00
+arshdeep BS 123.0
+norman   AA 1000.0

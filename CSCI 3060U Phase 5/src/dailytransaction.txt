@@ -1,4 +1,6 @@
 01 saijeeshan      AA 001000.00
+02 norman          AA 002000.00
+03 Computer            arshdeep    061 123.00
+04 Computer            arshdeep      saijeeshan       500.00
 05 arshdeep        saijeeshan      000033.00
-03 Computer            saijeeshan    061 123.00
-04 Computer            saijeeshan      arshdeep       111.00
+06 saijeeshan      arshdeep        000023.00
