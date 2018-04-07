@@ -96,6 +96,6 @@ public class UserAccounts {
      * @return a string representation of the user
      */
     public String toString() {
-        return userType + " " + userName + " " + String.valueOf(availableCredit);
+        return userName + " " + userType + " " + String.valueOf(availableCredit);
     }
 }

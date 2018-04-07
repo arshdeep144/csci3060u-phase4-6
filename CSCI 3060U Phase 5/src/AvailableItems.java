@@ -23,7 +23,7 @@ public class AvailableItems {
         The variables store information on the item name, seller username,
         bidder username, minimum bid, and number of days remaining.
     */
-    public AvailableItems(String item, String sName, String bName, float bidAmount, int days){
+    public AvailableItems(String item, String sName, String bName, int days, float bidAmount){
         itemName = item;
         sellerName = sName;
         buyerName = bName;

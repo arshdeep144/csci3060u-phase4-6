@@ -28,6 +28,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class BackEnd {
 
 
@@ -46,10 +47,17 @@ public class BackEnd {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        readDTF();
         readUAF();
         readAIF();
+        readDTF();
+        writeUAF();
+        writeAIF();
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
        This readDTF() method reads each of the transactions from the daily transaction file that is
@@ -88,22 +96,22 @@ public class BackEnd {
                 String transCode = transaction.substring(0, 2);
 
                 // Conditional if statement that will execute a transaction based on the transaction code.
-                if (transCode.equals("01") == true){
+                if (transCode.equals("01")){
                     createUser(transaction);
                 }
-                else if (transCode.equals("02") == true) {
+                else if (transCode.equals("02")) {
                     deleteUser(transaction);
                 }
-                else if (transCode.equals("03") == true) {
+                else if (transCode.equals("03")) {
                     advertise(transaction);
                 }
-                else if (transCode.equals("04") == true) {
+                else if (transCode.equals("04")) {
                     bid(transaction);
                 }
-                else if (transCode.equals("05") == true) {
+                else if (transCode.equals("05")) {
                     refund(transaction);
                 }
-                else if (transCode.equals("06") == true) {
+                else if (transCode.equals("06")) {
                     addCredit(transaction);
                 }
 
@@ -148,12 +156,12 @@ public class BackEnd {
             for (int i = 0; i < userArray.length; i++) {
                 String[] transVal = userArray[i].split("\\s+");
 
-                String type = transVal[0];
-                String name = transVal[1];
-                double credit = Double.parseDouble(transVal[2]);
+                String name = transVal[0];
+                String type = transVal[1];
+                double updateCredit = Double.parseDouble(transVal[2]);
 
-                UserAccounts newUser = new UserAccounts(name, type, (float) credit);
-                users.add(newUser);
+                UserAccounts addedUser = new UserAccounts(name, type, (float)updateCredit);
+                users.add(addedUser);
             }
         }
 
@@ -197,10 +205,69 @@ public class BackEnd {
                 int days = Integer.parseInt(transVal[3]);
                 double bidAmount = Double.parseDouble(transVal[4]);
 
-                AvailableItems newItem = new AvailableItems(itemName, sName, bName, (float)bidAmount, days);
+                AvailableItems newItem = new AvailableItems(itemName, sName, bName, days, (float)bidAmount);
 
                 items.add(newItem);
             }
+        }
+
+        catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" + itemFile + "'");
+        }
+
+        catch(IOException ex) {
+            System.out.println("Error reading file '" + itemFile + "'");
+        }
+    }
+
+    public static void writeUAF() throws IOException {
+
+        String userFile = "src/newuseraccounts.txt";
+
+        try {
+
+            FileWriter fw = new FileWriter(userFile);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            String writeUser = "";
+
+            for (UserAccounts user : users) {
+                writeUser += user.toString() + System.lineSeparator();
+            }
+
+            bw.write(writeUser);
+
+            bw.close();
+        }
+
+        catch(FileNotFoundException ex) {
+            System.out.println("Unable to open file '" + userFile + "'");
+        }
+
+        catch(IOException ex) {
+            System.out.println("Error reading file '" + userFile + "'");
+        }
+
+    }
+
+    public static void writeAIF() throws IOException {
+        String itemFile = "src/newavailableitems.txt";
+
+        try {
+
+            FileWriter fw = new FileWriter(itemFile);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            String writeItem = "";
+
+            for (AvailableItems item : items) {
+                writeItem += item.toString() + System.lineSeparator();
+            }
+
+            bw.write(writeItem);
+
+            bw.close();
+
         }
 
         catch(FileNotFoundException ex) {
@@ -226,8 +293,8 @@ public class BackEnd {
         try {
 
             FileWriter fw = new FileWriter(fileName2, true);
-
             BufferedWriter bw = new BufferedWriter(fw);
+
             bw.write(transaction);
             bw.newLine();
 
@@ -248,6 +315,59 @@ public class BackEnd {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static UserAccounts getUser(String username) {
+
+        for(UserAccounts user : users) {
+            if(user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public static int getUserPos(String username) {
+        int count = 0;
+
+        for(UserAccounts user : users) {
+            if(user.getUsername().equals(username)) {
+                return count;
+            }
+            else {
+                count ++;
+            }
+        }
+        return 0;
+    }
+
+    public static AvailableItems getItem(String itemName) {
+
+        for(AvailableItems item : items) {
+            if(item.getItemName().equals(itemName)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public static int getItemPos(String itemName) {
+        int count = 0;
+
+        for(AvailableItems item : items) {
+            if(item.getItemName().equals(itemName)) {
+                return count;
+            }
+            else {
+                count++;
+            }
+        }
+        return -1;
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * This method retrieves bid transaction outputs from the daily transaction file.
@@ -255,7 +375,21 @@ public class BackEnd {
      * @param transaction - the bid transaction from the daily transaction file
      */
     public static void bid(String transaction) {
+        //Printing transaction for testing
+        System.out.println("\n" + transaction);
 
+        String[] transVal = transaction.split("\\s+");
+
+        String item = transVal[1];
+        String sName = transVal[2];
+        String bName = transVal[3];
+        double bidAmount = Double.parseDouble(transVal[4]);
+
+        items.get(getItemPos(item)).setSellerName(sName);
+        items.get(getItemPos(item)).setBuyerName(bName);
+        items.get(getItemPos(item)).setBidAmount((float)bidAmount);
+        items.get(getItemPos(item)).setNumDays(000);
+        users.get(getItemPos(item)).bidItem((float)bidAmount);
     }
 
     /**
@@ -264,7 +398,20 @@ public class BackEnd {
      * @param transaction - the advertise transaction from the daily transaction file
      */
     public static void advertise(String transaction) {
+        //Printing transaction for testing
+        System.out.println("\n" + transaction);
 
+        String[] transVal = transaction.split("\\s+");
+
+        String item = transVal[1];
+        String sName = transVal[2];
+        int days = Integer.parseInt(transVal[3]);
+        double bidAmount = Double.parseDouble(transVal[4]);
+
+        AvailableItems addedItem = new AvailableItems(item, sName, "", days, (float)bidAmount);
+
+        users.get(getUserPos(sName)).advertiseItem((float)bidAmount);
+        items.add(addedItem);
     }
 
     /**
@@ -273,7 +420,17 @@ public class BackEnd {
      * @param transaction - the addCredit transaction from the daily transaction file
      */
     public static void addCredit(String transaction) {
+        //Printing transaction for testing
+        System.out.println("\n" + transaction);
 
+        String[] transVal = transaction.split("\\s+");
+
+        String name = transVal[1];
+        String type = transVal[2];
+        double addCreditAmount = Double.parseDouble(transVal[3]);
+        double credit = users.get(getUserPos(name)).getAvailableCredit();
+        double updateCredit = addCreditAmount + credit;
+        users.get(getUserPos(name)).setAvailableCredit((float)updateCredit);
     }
 
     /**
@@ -282,12 +439,14 @@ public class BackEnd {
      * @param transaction - the deleteUser transaction from the daily transaction file
      */
     public static void deleteUser(String transaction) {
-      String userDeleted = transaction..substring(3,18);
-      for(UserAccounts user : users){
-        if(user.getUsername() == userDeleted){
-          users.remove(user);
-        }
-      }
+        //Printing transaction for testing
+        System.out.println("\n" + transaction);
+
+        String[] transVal = transaction.split("\\s+");
+
+        String name = transVal[1];
+
+        users.remove(getUserPos(name));
     }
 
     /**
@@ -295,22 +454,18 @@ public class BackEnd {
      *
      * @param transaction - the createUser transaction from the daily transaction file
      */
-    public static void createUser(String transaction){
-        String userNameCreated = transaction.substring(3,18);
-        String userTypeCreated = transaction.substring(19,21);
-        Double userCredit = Double.parseDouble(transaction.substring(22,31));
-        UserAccounts newUser = UserAccounts(userNameCreated, userTypeCreated, (float) userCredit);
-        boolean duplicate = false;
-        for(UserAccounts user : users){
-          if(user.getUsername() == userNameCreated){
-            duplicate = true;
-          }
-        }
-        if(duplicate == false){
-          users.add(newUser);
-        }
+    public static void createUser(String transaction) {
         //Printing transaction for testing
         System.out.println("\n" + transaction);
+
+        String[] transVal = transaction.split("\\s+");
+        String name = transVal[1];
+        String type = transVal[2];
+        double updateCredit = Double.parseDouble(transVal[3]);
+
+        UserAccounts addedUser = new UserAccounts(name, type, (float)updateCredit);
+
+        users.add(addedUser);
     }
 
     /**
@@ -318,8 +473,29 @@ public class BackEnd {
      *
      * @param transaction - the refund transaction from the daily transaction file
      */
-    public static void refund(String transaction){
+    public static void refund(String transaction) {
         //Printing transaction for testing
         System.out.println("\n" + transaction);
+
+        String[] transVal = transaction.split("\\s+");
+
+        String bName = transVal[1];
+        String sName = transVal[2];
+        double updateCredit = Double.parseDouble(transVal[3]);
+
+        //adding bName's updateCredit
+        double buyerCredit = users.get(getUserPos(bName)).getAvailableCredit();
+        double updateBuyerCredit = buyerCredit + updateCredit;
+        users.get(getUserPos(bName)).setAvailableCredit((float)updateBuyerCredit);
+
+        //reducing sName's updateCredit
+        double sellerCredit = users.get(getUserPos(sName)).getAvailableCredit();
+        double updateSellerCredit = sellerCredit - updateCredit;
+        users.get(getUserPos(sName)).setAvailableCredit((float)updateSellerCredit);
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
